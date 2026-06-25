@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Eduardo Alves — Aprendo construindo</title>
+<meta name="description" content="Eduardo Alves — estudante de Ciência da Computação. Curioso por natureza: quando algo me interessa, construo um projeto pra entender. Um mapa de como eu aprendo, não uma lista de tecnologias." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0B0C10; --bg-2:#0F1116; --surface:#13161D; --surface-2:#191D26;
+    --border:#222732; --border-2:#2D3440;
+    --text:#ECEAE6; --dim:#9DA3AE; --muted:#6F7782;
+    --accent:#7C8CFF; --accent-soft:rgba(124,140,255,0.12); --accent-line:rgba(124,140,255,0.30);
+    --warm:#E0A981; --warm-soft:rgba(224,169,129,0.14);
+    --max:1080px;
+    --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px; --s7:96px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;
+    font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  ::selection{background:var(--accent-soft);color:#fff}
+  a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--s3)}
+
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:.74rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 4px var(--accent-soft);flex:none}
+  h2.section-title{font-family:'Space Grotesk',sans-serif;font-weight:600;
+    font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:-.02em;margin-top:var(--s2);line-height:1.15}
+
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(11,12,16,.72);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1rem;
+    display:flex;align-items:center;gap:10px;letter-spacing:-.01em}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+  .nav-links{display:flex;gap:var(--s4);align-items:center}
+  .nav-links a{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--dim);transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-toggle{display:none;background:none;border:1px solid var(--border-2);color:var(--text);
+    width:40px;height:40px;border-radius:8px;cursor:pointer;font-size:1.1rem}
+
+  .hero{padding:var(--s7) 0 var(--s6)}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s5);align-items:center}
+  .hero .eyebrow{margin-bottom:var(--s3)}
+  h1{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.6rem,7vw,4.4rem);
+    line-height:1.02;letter-spacing:-.035em;margin-bottom:var(--s3)}
+  h1 .accent{color:var(--accent)}
+  .role{font-family:'JetBrains Mono',monospace;font-size:clamp(.95rem,2.2vw,1.1rem);color:var(--text);margin-bottom:var(--s3)}
+  .lead{color:var(--dim);font-size:1.05rem;max-width:48ch;margin-bottom:var(--s4)}
+  .lead strong{color:var(--text);font-weight:500}
+  .meta{display:flex;flex-wrap:wrap;gap:var(--s3);margin-bottom:var(--s4);
+    font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted)}
+  .meta span{display:inline-flex;align-items:center;gap:7px}
+  .cta-row{display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;
+    font-size:.85rem;padding:11px 18px;border-radius:9px;border:1px solid var(--border-2);
+    color:var(--text);background:var(--surface);transition:.2s;cursor:pointer}
+  .btn:hover{border-color:var(--accent-line);background:var(--surface-2);transform:translateY(-1px)}
+  .btn.primary{background:var(--accent);color:#0B0C10;border-color:var(--accent);font-weight:500}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn svg{width:16px;height:16px}
+
+  /* ---- Curiosity Graph ---- */
+  .graph-wrap{display:flex;flex-direction:column;gap:var(--s2)}
+  .graph-card{border:1px solid var(--border);border-radius:18px;
+    background:radial-gradient(130% 130% at 75% 12%, rgba(124,140,255,.07), transparent 60%), var(--bg-2);
+    padding:var(--s2)}
+  .graph-card .tag{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);
+    letter-spacing:.1em;padding:6px 6px 0}
+  #graph{width:100%;display:block;touch-action:manipulation}
+  .gedge{stroke:var(--border-2);stroke-width:1.1;transition:stroke .25s}
+  .gedge.lit{stroke:var(--accent-line)}
+  .gedge.hot{stroke:var(--accent);stroke-width:1.6}
+  .gnode-ring{fill:none;stroke:var(--border-2);stroke-width:1.5;transition:stroke .25s,r .25s}
+  .gnode-ring.on{stroke:var(--accent)}
+  .gnode-fill{fill:var(--bg)} .gnode-fill.on{fill:var(--accent)}
+  .gnode-hit{fill:transparent;cursor:pointer;outline:none}
+  .gnode-hit:focus-visible + .gnode-ring,.gnode.hot .gnode-ring{stroke:var(--accent);stroke-width:2}
+  .glabel{font-family:'JetBrains Mono',monospace;font-size:9px;fill:var(--dim);pointer-events:none;transition:fill .25s}
+  .glabel.on{fill:var(--text)}
+  .gcenter-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:var(--accent);pointer-events:none;letter-spacing:.05em}
+  .pulse-dot{fill:var(--accent)}
+  .graph-caption{min-height:42px;font-size:.92rem;color:var(--dim);padding:0 6px}
+  .graph-caption .who{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.72rem;
+    letter-spacing:.08em;text-transform:uppercase;margin-right:8px}
+  .graph-hint{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted);padding:0 6px}
+
+  section{padding:var(--s6) 0;border-top:1px solid var(--border)}
+
+  .about-body{margin-top:var(--s4);display:grid;grid-template-columns:1fr 1fr;gap:var(--s4)}
+  .about-body p{color:var(--dim);margin-bottom:var(--s2)}
+  .about-body p strong{color:var(--text);font-weight:500}
+
+  /* ---- Curiosity Timeline ---- */
+  .tl-sub{color:var(--muted);margin-top:var(--s2);max-width:60ch}
+  .tl{margin-top:var(--s5);margin-left:6px;border-left:1px solid var(--border)}
+  .tl-item{position:relative;padding:0 0 var(--s4) var(--s4)}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-5px;top:5px;width:9px;height:9px;border-radius:50%;
+    background:var(--bg);border:1.5px solid var(--border-2);transition:.3s}
+  .tl-item.in::before{border-color:var(--accent)}
+  .tl-item.last::before{background:var(--warm);border-color:var(--warm);box-shadow:0 0 0 4px var(--warm-soft)}
+  .tl-item h4{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.02rem;letter-spacing:-.01em}
+  .tl-item.last h4{color:var(--warm)}
+  .tl-item p{color:var(--muted);font-size:.9rem;margin-top:2px}
+  .tl-item .when{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+
+  .skills-grid{margin-top:var(--s4);display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s2)}
+  .skill-group{border:1px solid var(--border);border-radius:12px;background:var(--surface);padding:var(--s3)}
+  .skill-group h3{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);margin-bottom:var(--s2)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--dim);
+    border:1px solid var(--border-2);border-radius:7px;padding:5px 10px;background:var(--bg-2)}
+  .chip em{color:var(--muted);font-style:normal}
+  .skills-note{margin-top:var(--s3);color:var(--muted);font-size:.92rem;max-width:62ch}
+  .skills-note strong{color:var(--dim);font-weight:500}
+
+  .lead-sub{color:var(--muted);margin-top:var(--s2);max-width:58ch}
+  .sync{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);
+    margin-top:var(--s2);display:inline-flex;align-items:center;gap:8px}
+  .sync .live-dot{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+  .sync.ok .live-dot{background:#5fcf8e;box-shadow:0 0 0 3px rgba(95,207,142,.15)}
+  .proj-grid{margin-top:var(--s4);display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s3)}
+  .card{border:1px solid var(--border);border-radius:14px;background:var(--surface);
+    padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2);transition:.22s;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);
+    transform:scaleY(0);transform-origin:top;transition:transform .25s}
+  .card:hover{border-color:var(--border-2);transform:translateY(-3px);background:var(--surface-2)}
+  .card:hover::before{transform:scaleY(1)}
+  .card.featured{grid-column:1/-1;
+    background:radial-gradient(120% 140% at 90% 0%, rgba(124,140,255,.07), transparent 50%), var(--surface)}
+  .card-top{display:flex;align-items:center;justify-content:space-between;gap:var(--s2)}
+  .card h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.25rem;letter-spacing:-.01em}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 9px;border-radius:20px;border:1px solid var(--accent-line);color:var(--accent);
+    background:var(--accent-soft);white-space:nowrap}
+  .badge.soon{border-color:var(--border-2);color:var(--muted);background:var(--bg-2)}
+  .card p.desc{color:var(--dim);font-size:.95rem}
+  .proj-sub{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .proj-sub .lang::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;
+    background:var(--c,var(--accent));margin-right:6px;vertical-align:middle}
+  .stack{display:flex;flex-wrap:wrap;gap:7px}
+  .stack span{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);
+    border:1px solid var(--border);border-radius:6px;padding:3px 8px}
+  .card .links{display:flex;gap:var(--s3);margin-top:var(--s1);
+    font-family:'JetBrains Mono',monospace;font-size:.8rem;align-items:center}
+  .card .links a,.study-toggle{color:var(--accent);display:inline-flex;align-items:center;gap:6px;
+    transition:.2s;background:none;border:none;cursor:pointer;font:inherit;padding:0}
+  .card .links a:hover,.study-toggle:hover{filter:brightness(1.15)}
+  .card .links a.dis{color:var(--muted);pointer-events:none}
+  .card .links svg{width:14px;height:14px}
+  .study-toggle .chev{transition:transform .2s}
+  .study-toggle[aria-expanded="true"] .chev{transform:rotate(90deg)}
+  .study{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease;margin-top:0}
+  .study.open{grid-template-rows:1fr;margin-top:var(--s2)}
+  .study-inner{overflow:hidden;border-top:1px solid var(--border);padding-top:var(--s2);display:grid;gap:12px}
+  .study-row{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:start}
+  .study-row dt{font-family:'JetBrains Mono',monospace;font-size:.7rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--accent)}
+  .study-row:first-child dt{color:var(--warm)}
+  .study-row dd{color:var(--dim);font-size:.92rem}
+  @media (prefers-reduced-motion: reduce){.study{transition:none}}
+
+  .now{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--dim);
+    display:flex;align-items:center;gap:9px;margin-bottom:var(--s4)}
+  .now .now-dot{width:7px;height:7px;border-radius:50%;background:var(--warm);
+    box-shadow:0 0 0 4px var(--warm-soft);flex:none}
+
+  .notes{margin-top:var(--s4);display:grid;gap:var(--s2)}
+  .note{border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden;transition:border-color .2s}
+  .note:hover{border-color:var(--border-2)}
+  .note summary{list-style:none;cursor:pointer;padding:var(--s3);display:flex;align-items:baseline;
+    justify-content:space-between;gap:var(--s2)}
+  .note summary::-webkit-details-marker{display:none}
+  .note summary h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.05rem;letter-spacing:-.01em}
+  .note summary .when{font-family:'JetBrains Mono',monospace;font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .note[open] summary{border-bottom:1px solid var(--border)}
+  .note .note-body{padding:var(--s3);color:var(--dim);font-size:.95rem}
+  .note .note-body p{margin-bottom:var(--s2)} .note .note-body p:last-child{margin-bottom:0}
+  .note .note-body strong{color:var(--text);font-weight:500}
+  .note .note-body code{font-family:'JetBrains Mono',monospace;font-size:.85em;color:var(--text);
+    background:var(--bg-2);border:1px solid var(--border);border-radius:5px;padding:1px 6px}
+
+  .contact-row{margin-top:var(--s4);display:flex;flex-wrap:wrap;gap:var(--s2)}
+  .contact-row .btn{flex:1;min-width:200px;justify-content:center}
+
+  footer{border-top:1px solid var(--border);padding:var(--s4) 0;color:var(--muted)}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--s2);
+    font-family:'JetBrains Mono',monospace;font-size:.78rem}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:var(--s4)}
+    .graph-wrap{max-width:380px;order:-1;margin:0 auto}
+    .about-body{grid-template-columns:1fr}
+    .skills-grid{grid-template-columns:repeat(2,1fr)}
+    .proj-grid{grid-template-columns:1fr}
+    .card.featured{grid-column:auto}
+    .study-row{grid-template-columns:1fr;gap:4px}
+    .nav-links{position:fixed;inset:62px 0 auto 0;flex-direction:column;gap:0;background:var(--bg-2);
+      border-bottom:1px solid var(--border);max-height:0;overflow:hidden;transition:max-height .3s}
+    .nav-links.open{max-height:320px}
+    .nav-links a{padding:16px var(--s3);width:100%;border-top:1px solid var(--border)}
+    .nav-toggle{display:block}
+  }
+  @media (max-width:480px){.skills-grid{grid-template-columns:1fr}.hero{padding:var(--s5) 0}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand"><span class="dot"></span>Eduardo Alves</a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#sobre">sobre</a><a href="#trajetoria">trajetória</a>
+      <a href="#projetos">projetos</a><a href="#notas">notas</a><a href="#contato">contato</a>
+    </nav>
+    <button class="nav-toggle" id="navtoggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" style="border-top:none">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Aprendo construindo · São Paulo</span>
+        <h1>Eduardo<br>Alves<span class="accent">.</span></h1>
+        <p class="role">Desenvolvedor — Python, web e dados</p>
+        <p class="lead">Não me defino por uma tecnologia, e sim por um hábito: <strong>quando fico curioso sobre algo, construo um projeto pra entender</strong>. O grafo ao lado é o mapa disso — toque nos nós pra ver como as coisas se conectam.</p>
+        <div class="meta"><span>◷ Suzano, SP — Brasil</span><span>◍ Ciência da Computação · Braz Cubas</span></div>
+        <p class="now"><span class="now-dot"></span>Atualmente: aprofundando back-end (PHP) e publicando meus projetos de dados.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="#projetos">O que eu construí</a>
+          <a class="btn" href="https://github.com/Educofseal" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0 0 12 2Z"/></svg>GitHub</a>
+          <a class="btn" href="https://www.linkedin.com/in/contatoedu/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5A2.5 2.5 0 1 1 0 3.5a2.5 2.5 0 0 1 4.98 0ZM.5 8.5h4V24h-4V8.5Zm7 0h3.8v2.1h.06c.53-1 1.83-2.1 3.76-2.1 4.02 0 4.76 2.65 4.76 6.1V24h-4v-6.9c0-1.65-.03-3.77-2.3-3.77-2.3 0-2.65 1.8-2.65 3.65V24h-4V8.5Z"/></svg>LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="graph-wrap">
+        <div class="graph-card">
+          <span class="tag">// mapa_de_curiosidade</span>
+          <svg id="graph" viewBox="0 0 320 320" role="group" aria-label="Mapa interativo das áreas que explorei, conectadas pela curiosidade"></svg>
+        </div>
+        <p class="graph-caption" id="gcap"><span class="who">curiosidade</span>Tudo aqui parte do mesmo lugar: fico curioso e construo pra entender.</p>
+        <p class="graph-hint" aria-hidden="true">passe o mouse ou toque em um nó</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="sobre">
+    <div class="wrap">
+      <span class="eyebrow reveal">Sobre</span>
+      <h2 class="section-title reveal">Um padrão que se repete: fico curioso, então construo</h2>
+      <div class="about-body">
+        <div class="reveal">
+          <p>Tem uma coisa que se repete na minha história: quando fico curioso sobre algo, acabo construindo um projeto pra entender. <strong>Não aprendo bem só lendo</strong> — preciso fazer, ver quebrar e descobrir o porquê.</p>
+          <p>Esse padrão me levou por lugares diferentes. Comecei com motion graphics e edição de vídeo, passei por automação e Linux, e hoje meu foco é desenvolvimento de software: <strong>Python, web e análise de dados</strong>.</p>
+        </div>
+        <div class="reveal">
+          <p>A fase criativa não ficou pra trás — ela mudou como eu penso. Quem passou anos editando e desenhando interface acaba se importando com <strong>como um projeto se comunica</strong>, não só com se ele roda.</p>
+          <p>Continuo sendo a mesma pessoa que abre um editor pra entender algo novo. O que procuro agora é um lugar pra fazer isso com gente que leva código a sério — construir, errar, entender.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="trajetoria">
+    <div class="wrap">
+      <span class="eyebrow reveal">Trajetória</span>
+      <h2 class="section-title reveal">Como cheguei até aqui</h2>
+      <p class="tl-sub reveal">Não é uma linha do tempo de carreira — é a da minha curiosidade. Olhando de longe, essas áreas não são soltas: uma puxou a outra, e todas levaram ao mesmo lugar.</p>
+      <div class="tl" id="timeline"></div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <span class="eyebrow reveal">Skills</span>
+      <h2 class="section-title reveal">Ferramentas que fui juntando pelo caminho</h2>
+      <div class="skills-grid">
+        <div class="skill-group reveal"><h3>Linguagens</h3><div class="chips">
+          <span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">SQL</span><span class="chip">PHP <em>(aprendendo)</em></span></div></div>
+        <div class="skill-group reveal"><h3>Web</h3><div class="chips">
+          <span class="chip">HTML</span><span class="chip">CSS</span><span class="chip">Bootstrap</span><span class="chip">React</span></div></div>
+        <div class="skill-group reveal"><h3>Dados</h3><div class="chips">
+          <span class="chip">pandas</span><span class="chip">SQL analítico</span><span class="chip">Power BI</span></div></div>
+        <div class="skill-group reveal"><h3>Ferramentas</h3><div class="chips">
+          <span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">Linux</span><span class="chip">VS Code</span></div></div>
+      </div>
+      <p class="skills-note reveal"><strong>Antes do código</strong>, passei anos com After Effects, motion graphics e edição de vídeo. Não é o foco aqui — mas é de onde vem meu cuidado com interface, ritmo e a forma de apresentar uma ideia.</p>
+    </div>
+  </section>
+
+  <section id="projetos">
+    <div class="wrap">
+      <span class="eyebrow reveal">Projetos</span>
+      <h2 class="section-title reveal">Coisas que construí pra entender algo</h2>
+      <p class="lead-sub reveal">Cada um começou com uma curiosidade, não com uma tecnologia. Abra o "case study" pra ver o que me fez construir — e o que ficou.</p>
+      <span class="sync reveal" id="sync"><span class="live-dot"></span><span id="sync-text">Carregando dados do GitHub…</span></span>
+      <div class="proj-grid" id="proj-grid"></div>
+    </div>
+  </section>
+
+  <section id="notas">
+    <div class="wrap">
+      <span class="eyebrow reveal">Notas</span>
+      <h2 class="section-title reveal">Coisas que anotei enquanto construía</h2>
+      <p class="lead-sub reveal">Notas curtas sobre problemas que enfrentei e o que tirei deles. É aqui que dá pra ver como eu penso quando algo quebra — não só o que ficou pronto.</p>
+      <div class="notes reveal">
+        <details class="note">
+          <summary><h3>Quando a tela fica cinza: depurando o Flet 0.85</h3><span class="when">Pokédex</span></summary>
+          <div class="note-body">
+            <p>Estava montando a Pokédex quando metade dos exemplos que eu achava online simplesmente não rodava. O Flet 0.85 tinha sido reescrito: classes viraram capitalizadas (<code>ft.colors</code> → <code>ft.Colors</code>), o entrypoint mudou, e os diálogos passaram a abrir de outro jeito.</p>
+            <p>O pior foi um sintoma <strong>sem erro nenhum</strong>: a tela abria totalmente cinza, nada no console. Fui isolando widget por widget até achar — eu tinha colocado um <code>Expanded</code> dentro de um <code>Wrap</code>, o que é inválido no Flutter e falha em silêncio. Separei a barra em um <code>Row</code> normal mais um <code>Row(wrap=True)</code> e a tela voltou.</p>
+            <p>O que ficou: quando o framework muda debaixo de você, <strong>ler o comportamento real na unha vale mais do que confiar em tutorial ou em memória</strong>. Meu reflexo era procurar a resposta pronta; o bug me obrigou a entender o porquê.</p>
+          </div>
+        </details>
+        <details class="note">
+          <summary><h3>Todo gráfico bonito em cima de dado ruim é mentira</h3><span class="when">Dados</span></summary>
+          <div class="note-body">
+            <p>Num projeto de qualidade de testes, gastei mais tempo validando a base do que fazendo gráfico — e foi a melhor decisão do projeto.</p>
+            <p>A regra que mais me marcou era boba: número de falhas nunca pode ser maior que o total de execuções. Parece óbvio, mas dado real vem sujo, e sem essa checagem <strong>na origem</strong> todo indicador em cima é mentira. Passei a tratar validação como parte do pipeline, não como um extra.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contato">
+    <div class="wrap">
+      <span class="eyebrow reveal">Contato</span>
+      <h2 class="section-title reveal">Bora construir alguma coisa</h2>
+      <p class="lead reveal" style="margin-top:var(--s2)">Se você também acha que a melhor forma de aprender é botando a mão, vamos conversar. Estou aberto a estágios e projetos — resposta mais rápida por e-mail ou LinkedIn.</p>
+      <div class="contact-row reveal">
+        <a class="btn primary" href="mailto:contatoedu07@gmail.com">contatoedu07@gmail.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/contatoedu/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/Educofseal" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap foot-inner">
+  <span>© 2026 Eduardo Alves</span><span>Sem template — construído à mão, aprendendo no processo</span>
+</div></footer>
+
+<script>
+const REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const SVGNS = "http://www.w3.org/2000/svg";
+const el = (t,a={})=>{const e=document.createElementNS(SVGNS,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+/* ===================== CURIOSITY GRAPH ===================== */
+const GRAPH_NODES = [
+  {label:"Algoritmos", on:true,  hint:"A curiosidade sobre sistemas de recomendação me levou ao Player2 e a implementar grafos do zero."},
+  {label:"Python",     on:true,  hint:"Virou minha ferramenta principal — a linguagem em que testo quase toda ideia nova."},
+  {label:"Dados",      on:true,  hint:"Quis entender o caminho do dado cru até o indicador. Construí pipelines pra ver de perto."},
+  {label:"Automação",  on:false, hint:"Comecei automatizando tarefas chatas; acabei entendendo como sistemas se encaixam."},
+  {label:"Linux",      on:false, hint:"Começou como experimentação e virou um jeito de entender o que roda por baixo."},
+  {label:"Motion",     on:false, hint:"Anos de motion graphics antes do código — mudou como penso ritmo e interface."},
+  {label:"Vídeo",      on:false, hint:"Edição de vídeo foi onde aprendi a contar uma ideia com clareza e tempo."},
+  {label:"UI",         on:false, hint:"Desenhar interface me ensinou que como algo se comunica importa tanto quanto se funciona."},
+  {label:"Problemas",  on:true,  hint:"No fundo, o que me prende é o mesmo em tudo: resolver e entender o porquê."}
+];
+const CENTER_HINT = "Tudo aqui parte do mesmo lugar: fico curioso e construo pra entender.";
+
+function buildGraph(){
+  const svg = document.getElementById('graph');
+  const cap = document.getElementById('gcap');
+  const VB = 320, C = {x:160, y:160, r:14};
+  const R = 108, N = GRAPH_NODES.length;
+
+  const gEdges = el('g'), gPulses = el('g'), gNodes = el('g'), gLabels = el('g');
+  svg.append(gEdges, gPulses, gNodes, gLabels);
+
+  const nodes = GRAPH_NODES.map((d,i)=>{
+    const ang = -Math.PI/2 + i*(2*Math.PI/N);
+    const bx = C.x + R*Math.cos(ang), by = C.y + R*Math.sin(ang);
+    const edge = el('line',{class:'gedge'+(d.on?' lit':''), x1:C.x, y1:C.y, x2:bx, y2:by});
+    const ring = el('circle',{class:'gnode-ring'+(d.on?' on':''), cx:bx, cy:by, r:8});
+    const fill = el('circle',{class:'gnode-fill'+(d.on?' on':''), cx:bx, cy:by, r:8});
+    const hit  = el('circle',{class:'gnode-hit', cx:bx, cy:by, r:22, tabindex:0, role:'button',
+                              'aria-label':d.label+': '+d.hint});
+    const lx = C.x + (R+19)*Math.cos(ang), ly = C.y + (R+19)*Math.sin(ang) + 3;
+    const label = el('text',{class:'glabel'+(d.on?' on':''), x:lx, y:ly, 'text-anchor':'middle'});
+    label.textContent = d.label;
+    gEdges.append(edge); gNodes.append(ring, fill, hit); gLabels.append(label);
+    const node = {d, bx, by, edge, ring, fill, hit, label,
+      px:Math.random()*6.28, py:Math.random()*6.28,
+      sx:0.00018+Math.random()*0.00014, sy:0.00018+Math.random()*0.00014,
+      ax:3+Math.random()*2, ay:3+Math.random()*2, x:bx, y:by};
+
+    const enter = ()=>setActive(node), leave = ()=>clearActive();
+    hit.addEventListener('mouseenter', enter);
+    hit.addEventListener('mouseleave', leave);
+    hit.addEventListener('focus', enter);
+    hit.addEventListener('blur', leave);
+    hit.addEventListener('click', ()=>setActive(node));
+    return node;
+  });
+
+  // center node
+  const cRing = el('circle',{class:'gnode-ring on', cx:C.x, cy:C.y, r:C.r});
+  const cFill = el('circle',{class:'gnode-fill on', cx:C.x, cy:C.y, r:C.r});
+  const cLab  = el('text',{class:'gcenter-label', x:C.x, y:C.y+26, 'text-anchor':'middle'});
+  cLab.textContent = 'curiosidade';
+  gNodes.append(cRing, cFill); gLabels.append(cLab);
+
+  let active = null;
+  function setActive(node){
+    active = node;
+    nodes.forEach(n=>{
+      const isA = n===node;
+      n.edge.classList.toggle('hot', isA);
+      n.ring.classList.toggle('hot', isA);
+      n.ring.parentNode && n.ring.classList.toggle('on', n.d.on || isA);
+      n.label.classList.toggle('on', n.d.on || isA);
+    });
+    cap.innerHTML = `<span class="who">${node.d.label}</span>${node.d.hint}`;
+  }
+  function clearActive(){
+    active = null;
+    nodes.forEach(n=>{
+      n.edge.classList.remove('hot');
+      n.ring.classList.remove('hot');
+      n.ring.classList.toggle('on', n.d.on);
+      n.label.classList.toggle('on', n.d.on);
+    });
+    cap.innerHTML = `<span class="who">curiosidade</span>${CENTER_HINT}`;
+  }
+
+  // pulses: small dots travelling center -> node, like ideas connecting
+  let pulses = [];
+  function spawnPulse(){
+    if(document.hidden) return;
+    const n = nodes[Math.floor(Math.random()*nodes.length)];
+    const dot = el('circle',{class:'pulse-dot', r:2.6, cx:C.x, cy:C.y, opacity:0});
+    gPulses.append(dot);
+    pulses.push({n, dot, start:performance.now(), dur:1100});
+  }
+
+  function frame(now){
+    nodes.forEach(n=>{
+      n.x = n.bx + Math.sin(now*n.sx + n.px)*n.ax;
+      n.y = n.by + Math.cos(now*n.sy + n.py)*n.ay;
+      n.ring.setAttribute('cx',n.x); n.ring.setAttribute('cy',n.y);
+      n.fill.setAttribute('cx',n.x); n.fill.setAttribute('cy',n.y);
+      n.hit.setAttribute('cx',n.x);  n.hit.setAttribute('cy',n.y);
+      n.edge.setAttribute('x2',n.x); n.edge.setAttribute('y2',n.y);
+    });
+    pulses = pulses.filter(p=>{
+      const t=(now-p.start)/p.dur;
+      if(t>=1){ p.dot.remove(); return false; }
+      p.dot.setAttribute('cx', C.x+(p.n.x-C.x)*t);
+      p.dot.setAttribute('cy', C.y+(p.n.y-C.y)*t);
+      p.dot.setAttribute('opacity', (t<0.8 ? 0.85 : (1-t)/0.2*0.85).toFixed(2));
+      return true;
+    });
+    raf = requestAnimationFrame(frame);
+  }
+
+  let raf;
+  if(!REDUCE){
+    raf = requestAnimationFrame(frame);
+    setInterval(spawnPulse, 1500);
+  }
+}
+buildGraph();
+
+/* ===================== CURIOSITY TIMELINE ===================== */
+const TIMELINE = [
+  {when:"o começo", t:"Edição de vídeo", d:"Onde aprendi a contar uma ideia com clareza e tempo."},
+  {when:"depois",   t:"Motion graphics", d:"Movimento, ritmo — e o gosto por como as coisas aparecem na tela."},
+  {when:"curiosidade", t:"Linux", d:"Vontade de entender o que roda por baixo do sistema."},
+  {when:"então",    t:"Automação", d:"Tirar o trabalho repetitivo do caminho e ver as peças se encaixarem."},
+  {when:"o foco",   t:"Python", d:"A linguagem onde passei a testar quase toda ideia nova."},
+  {when:"em seguida", t:"Análise de dados", d:"Do dado cru ao indicador que alguém usa pra decidir."},
+  {when:"mais fundo", t:"Algoritmos", d:"Como as coisas decidem — grafos, busca, ordenação. Daí saiu o Player2."},
+  {when:"é aqui que estou", t:"Engenharia de software", d:"Onde tudo isso se junta. Não largei nenhuma das anteriores — elas viraram o jeito que eu penso.", last:true}
+];
+(function buildTimeline(){
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = TIMELINE.map(s=>`
+    <div class="tl-item reveal${s.last?' last':''}">
+      <span class="when">${s.when}</span>
+      <h4>${s.t}</h4>
+      <p>${s.d}</p>
+    </div>`).join("");
+})();
+
+/* ===================== PROJECTS (GitHub live) ===================== */
+const USER = "Educofseal";
+const FEATURED = [
+  {repo:"Player2", featured:true,
+    story:"Fiquei fascinado por como conexões entre pessoas poderiam ser representadas matematicamente. Isso me levou a construir o Player2 e implementar Dijkstra, BFS e DFS do zero pra ordenar o feed por afinidade.",
+    stack:["Python","Flet","Grafos do zero","Teoria dos grafos"], demo:null,
+    study:{curiosidade:"E se uma recomendação não fosse caixa-preta? Quis ver se conseguia deixar o 'porquê' de cada match visível.",
+      resolvi:"Cada pessoa virou um nó de um grafo ponderado (mais interesses em comum = aresta mais barata). Dijkstra ordena o feed, BFS mede distância social, DFS encontra grupos.",
+      desafio:"Implementar os três algoritmos sem biblioteca pronta e manter o feed transparente: cada card mostra o caminho e o custo até aquela pessoa.",
+      aprendi:"Grafos na prática — e que separar os algoritmos da interface foi o que manteve o projeto compreensível pra mim mesmo semanas depois."}},
+  {repo:"Pokedex", featured:false,
+    story:"Queria entender como um app desktop consome uma API e continua rápido depois de fechar e abrir. Virou uma Pokédex dos 151 de Kanto — uma boa desculpa pra montar a arquitetura de um app de verdade.",
+    stack:["Python","Flet","PokéAPI","Cache local"], demo:null,
+    study:{curiosidade:"Como é o ciclo completo de um app desktop: buscar de uma API, guardar localmente e renderizar sem travar?",
+      resolvi:"Cliente da PokéAPI com cache local em JSON (busca na primeira vez, lê do disco depois) e UI modular em Flet com sprites animados.",
+      desafio:"O Flet 0.85 tinha mudado muita coisa de API, e um bug de layout deixava a tela cinza. Tive que investigar o runtime na unha.",
+      aprendi:"Quando a documentação não bate com a realidade, testar o comportamento na prática é mais rápido do que adivinhar."}},
+  {repo:"qualidade-testes-dashboard", featured:false,
+    story:"Me peguei curioso sobre o caminho que um dado bagunçado percorre até virar um número confiável num dashboard. Em vez de ler sobre, construí o caminho inteiro.",
+    stack:["Python","pandas","SQL","Power BI"], demo:null,
+    study:{curiosidade:"Que etapas existem entre o dado cru e o indicador que alguém usa pra decidir?",
+      resolvi:"Pipeline em Python com validação de regras de negócio e 13 features derivadas, 10 consultas SQL (incluindo window functions) e um dashboard em Power BI.",
+      desafio:"Garantir que o dado fosse confiável na origem — falha nunca maior que o total, percentuais recalculados — antes de qualquer análise.",
+      aprendi:"Que validar os dados é parte do trabalho, não um detalhe. Sem isso, todo gráfico bonito em cima é mentira."}},
+  {repo:"rh-people-analytics", featured:false,
+    story:"Tive contato com RH e fiquei com uma pergunta: dá pra transformar questões humanas — 'quem tende a sair?', 'quanto custa de verdade?' — em dados que se sustentam?",
+    stack:["Python","pandas","SQL","Power BI"], demo:null,
+    study:{curiosidade:"Consigo traduzir perguntas de gente em métricas defensáveis, sem inventar número?",
+      resolvi:"Pipeline sobre 300 colaboradores com 11 features (custo com encargos, faixas, flags de risco), 10 consultas SQL e um score multicritério de risco de retenção.",
+      desafio:"Modelar custo e risco de um jeito que eu conseguisse explicar numa reunião — não só calcular.",
+      aprendi:"A parte difícil de dados raramente é a query. É fazer a pergunta certa e ser honesto com o que o número diz."}}
+];
+
+const LANG_COLOR = {Python:"#3572A5",JavaScript:"#f1e05a",TypeScript:"#3178c6",HTML:"#e34c26",CSS:"#563d7c",Java:"#b07219",PHP:"#4F5D95"};
+const ICON_GH = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 8.84 21.5c.5.08.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.1-1.47-1.1-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.57.67.48A10 10 0 0 0 12 2Z"/></svg>';
+const ICON_LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>';
+const ICON_CHEV = '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+const fmtDate = (iso)=>{ try{ return new Date(iso).toLocaleDateString('pt-BR',{month:'short',year:'numeric'}); }catch(e){ return ""; } };
+const esc = (s)=> (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function renderCard(item, idx, live){
+  const published = !!live;
+  const lang = live && live.language ? live.language : item.stack[0];
+  const updated = published ? `atualizado em ${fmtDate(live.pushed_at)}` : "ainda não publicado";
+  const badge = published ? '<span class="badge">No ar</span>' : '<span class="badge soon">Em breve</span>';
+  const url = published ? live.html_url : `https://github.com/${USER}`;
+  const repoLink = published
+    ? `<a href="${url}" target="_blank" rel="noopener">${ICON_GH} Repositório</a>`
+    : `<a class="dis" aria-disabled="true">${ICON_GH} Em breve</a>`;
+  const demoLink = item.demo ? `<a href="${item.demo}" target="_blank" rel="noopener">${ICON_LINK} Demo</a>` : "";
+  const stack = item.stack.map(s=>`<span>${esc(s)}</span>`).join("");
+  const sid = `study-${idx}`;
+  const title = item.repo==='Pokedex' ? 'Pokédex Desktop' : item.repo;
+  const rows = Object.entries({
+    "O que me deixou curioso":item.study.curiosidade,
+    "Como resolvi":item.study.resolvi,
+    "O desafio que me prendeu":item.study.desafio,
+    "O que aprendi":item.study.aprendi
+  }).map(([k,v])=>`<div class="study-row"><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
+  return `<article class="card ${item.featured?'featured':''} reveal in" data-repo="${item.repo}">
+    <div class="card-top"><h3>${esc(title)}</h3>${badge}</div>
+    <div class="proj-sub"><span class="lang" style="--c:${LANG_COLOR[lang]||'#888'}">${esc(lang)}</span><span>${updated}</span></div>
+    <p class="desc">${esc(item.story)}</p>
+    <div class="stack">${stack}</div>
+    <div class="links">${repoLink}${demoLink}
+      <button class="study-toggle" aria-expanded="false" aria-controls="${sid}">${ICON_CHEV} Case study</button></div>
+    <div class="study" id="${sid}"><dl class="study-inner">${rows}</dl></div>
+  </article>`;
+}
+function mount(byName){
+  const grid = document.getElementById('proj-grid');
+  grid.innerHTML = FEATURED.map((item,idx)=>renderCard(item, idx, byName?byName[item.repo.toLowerCase()]:null)).join("");
+  grid.querySelectorAll('.study-toggle').forEach(btn=>btn.addEventListener('click',()=>{
+    const p=document.getElementById(btn.getAttribute('aria-controls'));
+    btn.setAttribute('aria-expanded', p.classList.toggle('open'));
+  }));
+}
+async function loadGitHub(){
+  const sync=document.getElementById('sync'), txt=document.getElementById('sync-text');
+  try{
+    const res=await fetch(`https://api.github.com/users/${USER}/repos?per_page=100&sort=updated`,{headers:{Accept:"application/vnd.github+json"}});
+    if(!res.ok) throw 0;
+    const repos=await res.json(); if(!Array.isArray(repos)) throw 0;
+    const byName={}; repos.forEach(r=>byName[r.name.toLowerCase()]=r);
+    mount(byName); sync.classList.add('ok'); txt.textContent="Sincronizado com o GitHub";
+  }catch(e){ mount(null); txt.textContent="Dados do GitHub (cache local)"; }
+}
+mount(null); loadGitHub();
+
+/* nav + reveal */
+const toggle=document.getElementById('navtoggle'), links=document.getElementById('navlinks');
+toggle.addEventListener('click',()=>{const o=links.classList.toggle('open');toggle.setAttribute('aria-expanded',o);toggle.textContent=o?'✕':'☰';});
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{links.classList.remove('open');toggle.textContent='☰';toggle.setAttribute('aria-expanded',false);}));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(x=>io.observe(x));
+</script>
+</body>
+</html>
